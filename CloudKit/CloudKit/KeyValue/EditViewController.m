@@ -39,7 +39,7 @@
     [record setValue:_textField.text forKey:@"title"];
     [record setValue:_textView.text forKey:@"content"];
     [record setValue:@(timestamp) forKey:@"date"];
-    [record setValue:@"aaaaaaaaaaaaaaaaaaaaaaaa" forKey:@"aaaaaa"];
+    [record setValue:@"as" forKey:@"aaaaaa"];
     
 //
 //    CKNotificationInfo *notificationInfo = [CKNotificationInfo new];
