@@ -7,15 +7,24 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "LocalDataBaseDefines.h"
-#import "LocalDBQuery.h"
+//#import "LocalDataBaseDefines.h"
 
-@class FMResultSet;
+typedef NS_ENUM(NSUInteger, DBOperations) {
+    DBOperationNone,
+    DBOperationAdd,
+    DBOperationDelete,
+    DBOperationUpdate,
+    DBOperationSelect
+};
+
+@class FMResultSet, LocalDBQuery;
 @protocol LocalDBRecord <NSObject>
 
 //@property (nonatomic, strong, readonly) NSString *dbName;
+@property (nonatomic, strong) NSString  *recordId;  // 记录 id
 @property (nonatomic, strong, readonly) LocalDBQuery *query;
 @property (nonatomic, assign) DBOperations            operation;
+@property (nonatomic, assign) BOOL                    sync;
 
 /**
  获取建表 sql
@@ -27,6 +36,11 @@
  获取查询 sql
  */
 + (NSString *)selectQuery;
+
+/**
+ 获取未同步记录的 sql
+ */
++ (NSString *)unsyncQuery;
 
 /**
  根据查询结果批量实例化对象

@@ -21,7 +21,7 @@
 		24A4BD6B20F702420008761D /* UserData.h in Headers */ = {isa = PBXBuildFile; fileRef = 24A4BD6920F702420008761D /* UserData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		24A4BD6E20F702420008761D /* UserData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24A4BD6720F702420008761D /* UserData.framework */; };
 		24A4BD6F20F702420008761D /* UserData.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 24A4BD6720F702420008761D /* UserData.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		24A4BD7A20F703C10008761D /* LocalDBBaseRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = 24A4BD7820F703C10008761D /* LocalDBBaseRecord.h */; };
+		24A4BD7A20F703C10008761D /* LocalDBBaseRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = 24A4BD7820F703C10008761D /* LocalDBBaseRecord.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		24A4BD7B20F703C10008761D /* LocalDBBaseRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 24A4BD7920F703C10008761D /* LocalDBBaseRecord.m */; };
 		24D85B5520F709670019B3FC /* DataStroage.h in Headers */ = {isa = PBXBuildFile; fileRef = 24D85B5320F709670019B3FC /* DataStroage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		24D85B5620F709670019B3FC /* DataStroage.m in Sources */ = {isa = PBXBuildFile; fileRef = 24D85B5420F709670019B3FC /* DataStroage.m */; };
@@ -354,11 +354,11 @@
 				24D85B6320F72B3A0019B3FC /* LocalDataBaseDefines.h in Headers */,
 				24D85B5520F709670019B3FC /* DataStroage.h in Headers */,
 				24D85B7120F73AA40019B3FC /* CKDBManager.h in Headers */,
+				24A4BD7A20F703C10008761D /* LocalDBBaseRecord.h in Headers */,
 				24D85B6220F72B370019B3FC /* LocalDBRecord.h in Headers */,
 				24D85B7A20F75BCD0019B3FC /* NSDate+Uniq.h in Headers */,
 				24D85B7F20F75CF60019B3FC /* NSString+Encrypt.h in Headers */,
 				24D85B6D20F73A9A0019B3FC /* CKDBBaseRecord.h in Headers */,
-				24A4BD7A20F703C10008761D /* LocalDBBaseRecord.h in Headers */,
 				24D85B5A20F71C730019B3FC /* LocalDBManager.h in Headers */,
 				24D85B6020F727CA0019B3FC /* LocalDBQuery.h in Headers */,
 				24A4BD6B20F702420008761D /* UserData.h in Headers */,
@@ -759,6 +759,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 797C733CB6EC09977737A54D /* Pods-UserData.debug.xcconfig */;
 			buildSettings = {
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -783,6 +784,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9C266B1595BC99DC2EB5938E /* Pods-UserData.release.xcconfig */;
 			buildSettings = {
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;

@@ -12,6 +12,12 @@
 #import "NotesListCell.h"
 #import <MJRefresh.h>
 
+//#import "UserData.h"
+//#import <UserData/DataStroage.h>
+//#import "UserData.h"
+#import "DataStroage.h"
+
+
 @interface ViewController ()
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -25,42 +31,19 @@
     [super viewDidLoad];
     [self createUI];
     
-    [[NSURLSession sharedSession] dataTaskWithURL:[NSURL URLWithString:@"https://www.baidu.com"] completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        NSLog(@"data = %ld", data.length);
+    NSLog(@"db = %@", [CKContainer defaultContainer].privateCloudDatabase);
+    [[CKContainer defaultContainer] statusForApplicationPermission:CKApplicationPermissionUserDiscoverability completionHandler:^(CKApplicationPermissionStatus applicationPermissionStatus, NSError * _Nullable error) {
+        
     }];
     
+//    [CKContainer defaultContainer].privateCloudDatabase performQuery:<#(nonnull CKQuery *)#> inZoneWithID:<#(nullable CKRecordZoneID *)#> completionHandler:<#^(NSArray<CKRecord *> * _Nullable results, NSError * _Nullable error)completionHandler#>
     
-//    [[CKContainer defaultContainer] requestApplicationPermission:CKApplicationPermissionUserDiscoverability completionHandler:^(CKApplicationPermissionStatus applicationPermissionStatus, NSError * _Nullable error) {
-//        if (applicationPermissionStatus == CKApplicationPermissionStatusGranted) {
-//            return ;
-//            if (@available(iOS 10.0, *)) {
-//
-//                [[CKContainer defaultContainer] discoverAllIdentitiesWithCompletionHandler:^(NSArray<CKUserIdentity *> * _Nullable userIdentities, NSError * _Nullable error) {
-//                    NSPersonNameComponents *comps = [userIdentities firstObject].nameComponents;
-//                    NSLog(@"%@", userIdentities);
-////                    NSPersonNameComponents;
-////                    NSString *s = [NSPersonNameComponentsFormatter localizedStringFromPersonNameComponents:comps style:NSPersonNameComponentsFormatterStyleLong options:NSPersonNameComponentsFormatterPhonetic];
-////                    NSLog(@"%@   %@    %@   %@", comps.familyName, comps.givenName, comps.nickname, s);
-//                }];
-//            } else {
-//                // Fallback on earlier versions
-//            }
-//        }
-//    }];
+//    [[CKOperation alloc] init];
     
-    if (@available(iOS 9.0, *)) {
-        [[NSNotificationCenter defaultCenter] addObserverForName:CKAccountChangedNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
-            
-        }];
-    } else {
-        // Fallback on earlier versions
-    }
+//    [[CKUserIdentity new] hasiCloudAccount];
     
-    
-//    [[CKQuerySubscription alloc] initWithRecordType:@"Note" predicate:[NSPredicate predicateWithValue:YES] options:CKQuerySubscriptionOptionsFiresOnRecordCreation];
-    
-    
-    
+//    [DataStroage upload];
+//    [DataStroage download];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -91,46 +74,11 @@
 #pragma mark - Data
 
 - (void)refreshData {
-    CKContainer *container = [CKContainer defaultContainer];
-    
-    [container accountStatusWithCompletionHandler:^(CKAccountStatus accountStatus, NSError * _Nullable error) {
-        
+    [DataStroage records:^(NSArray *records) {
+        self.dataSource = records;
+        [_tableView.mj_header endRefreshing];
+        [_tableView reloadData];
     }];
-    
-    CKDatabase *db = container.privateCloudDatabase;
-    NSPredicate *predicate = [NSPredicate predicateWithValue:YES];
-//    predicate = [NSPredicate predicateWithFormat:@"title = \"11111\" && date = 1512989693"];
-    CKQuery *query = [[CKQuery alloc] initWithRecordType:@"Notes" predicate:predicate];
-//    CKQueryOperation *operation = [[CKQueryOperation alloc] initWithQuery:query];
-//    [db addOperation:operation];
-//    [operation setQueryCompletionBlock:^(CKQueryCursor * _Nullable cursor, NSError * _Nullable operationError) {
-//
-//    }];
-    [db performQuery:query inZoneWithID:nil completionHandler:^(NSArray<CKRecord *> * _Nullable results, NSError * _Nullable error) {
-        if (error) {
-            NSLog(@"error = %@", error);
-        }
-        self.dataSource = results;
-//        NSLog(@"dataSource = %@", _dataSource);
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [_tableView.mj_header endRefreshing];
-            [_tableView reloadData];
-        });
-        
-//        CKRecord *record = [results lastObject];
-//        if (@available(iOS 10.0, *)) {
-//            [[CKContainer defaultContainer] discoverUserIdentityWithUserRecordID:record.recordID completionHandler:^(CKUserIdentity * _Nullable userInfo, NSError * _Nullable error) {
-//
-//                NSPersonNameComponents *comps = userInfo.nameComponents;
-//                NSString *s = [NSPersonNameComponentsFormatter localizedStringFromPersonNameComponents:comps style:NSPersonNameComponentsFormatterStyleLong options:NSPersonNameComponentsFormatterPhonetic];
-//                NSLog(@"%@   %@    %@   %@", comps.familyName, comps.givenName, comps.nickname, s);
-//            }];
-//        } else {
-//            // Fallback on earlier versions
-//        }
-    }];
-    
-//    [CKSubscription alloc] initWithZoneID:<#(nonnull CKRecordZoneID *)#> options:<#(CKSubscriptionOptions)#>
 }
 
 #pragma mark - UITableView dataSource
@@ -145,9 +93,17 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NotesListCell *cell = [tableView dequeueReusableCellWithIdentifier:NotesListCell_INDEF];
-    CKRecord *record = _dataSource[indexPath.row];
-    cell.titleLabel.text = [NSString stringWithFormat:@"%@-%@", [record valueForKey:@"title"], [record valueForKey:@"aaaaaa"]];
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"(%u)", arc4random() % 100 + 30];
+    LocalDBBaseRecord *record = _dataSource[indexPath.row];
+    cell.titleLabel.text = record.title;
+    
+    cell.detailTextLabel.text = ({
+        NSDate *date = [NSDate dateWithTimeIntervalSince1970:record.date];
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+        [formatter stringFromDate:date];
+    });
+    
+    NSLog(@"recordId = %@   %@", record, record.recordId);
     return cell;
 }
 

@@ -8,16 +8,17 @@
 
 #import "LocalDBRecord.h"
 
-@class FMResultSet;
+@class FMResultSet, LocalDBQuery;
 @interface LocalDBBaseRecord : NSObject <LocalDBRecord>
 
 @property (nonatomic, strong, readonly) LocalDBQuery *query;
 @property (nonatomic, assign) DBOperations            operation;
 
-@property (nonatomic, strong) NSString  *ckId;
+@property (nonatomic, strong) NSString  *recordId;
 @property (nonatomic, strong) NSString  *title;
 @property (nonatomic, strong) NSString  *content;
 @property (nonatomic, assign) NSInteger  date;
+@property (nonatomic, assign) BOOL       sync;
 
 + (NSArray *)recordsWithResultSet:(FMResultSet *)resultSet;
 

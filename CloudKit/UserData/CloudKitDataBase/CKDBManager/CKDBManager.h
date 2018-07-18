@@ -12,8 +12,20 @@
 @class CKRecord;
 @interface CKDBManager : NSObject
 
+/**
+ 查询库内记录
+
+ @param name  库名称
+ @param block 回调
+ */
 + (void)recordsWithName:(NSString *)name block:(void(^)(NSArray <CKDBBaseRecord *>*records))block;
 
-+ (void)saveRecords:(NSArray *)records block:(void(^)(BOOL success))block;
+/**
+ 保存记录
+
+ @param records  记录数组
+ @param complete 执行完成回调
+ */
++ (void)saveRecords:(NSArray *)records syncRecord:(void(^)(CKDBBaseRecord *record))block complete:(void(^)(BOOL success))complete;
 
 @end

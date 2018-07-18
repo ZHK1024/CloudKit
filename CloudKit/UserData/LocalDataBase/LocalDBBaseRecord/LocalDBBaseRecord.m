@@ -9,6 +9,7 @@
 #import "LocalDBBaseRecord.h"
 #import <FMResultSet.h>
 #import "NSString+Encrypt.h"
+#import "LocalDBQuery.h"
 
 static NSString *const DBName = @"Note";
 
@@ -19,8 +20,6 @@ static NSString *const DBName = @"Note";
 @property (nonatomic, strong) NSString *insertQuery;
 @property (nonatomic, strong) NSString *deleteQuery;
 @property (nonatomic, strong) NSString *updateQuery;
-
-@property (nonatomic, assign) NSString *recordId;
 
 @end
 
@@ -55,12 +54,12 @@ static NSString *const DBName = @"Note";
 
     switch (_operation) {
         case DBOperationAdd:
-            query.exetuteQuery = [NSString stringWithFormat:@"INSERT INTO %@ (`title`, `ckid`, `content`, `date`) VALUES(?, ?, ?, ?)", DBName];
-            query.arguments = @[self.title, self.ckId, self.content, @(self.date)];
+            query.exetuteQuery = [NSString stringWithFormat:@"INSERT INTO %@ (`id`, `title`, `content`, `date`, `sync`) VALUES(?, ?, ?, ?, ?)", DBName];
+            query.arguments = @[self.recordId, self.title, self.content, @(self.date), @(self.sync)];
             break;
         case DBOperationUpdate:
-            query.exetuteQuery = [NSString stringWithFormat:@"UPDATE %@ SET `title` = ?, `ckid` = ?, `content` = ?, `date` = ? WHERE id = ?", DBName];
-            query.arguments = @[self.title, self.ckId, self.content, @(self.date), self.recordId];
+            query.exetuteQuery = [NSString stringWithFormat:@"UPDATE %@ SET `title` = ?, `content` = ?, `date` = ?, `sync` = ? WHERE id = ?", DBName];
+            query.arguments = @[self.title, self.content, @(self.date), @(self.sync), self.recordId];
             break;
         case DBOperationDelete:
             query.exetuteQuery = [NSString stringWithFormat:@"DELETE FROM %@ WHERE id = ?", DBName];
@@ -72,7 +71,7 @@ static NSString *const DBName = @"Note";
     return query;
 }
 
-GETTER_SAFE(NSString, ckId, @"")
+//GETTER_SAFE(NSString, recordId, @"")
 GETTER_SAFE(NSString, title, @"")
 GETTER_SAFE(NSString, content, @"")
 
@@ -87,14 +86,18 @@ GETTER_SAFE(NSString, content, @"")
     return [NSString stringWithFormat:@"SELECT * FROM %@", DBName];
 }
 
++ (NSString *)unsyncQuery {
+    return [NSString stringWithFormat:@"SELECT * FROM %@ WHERE sync = 0", DBName];
+}
+
 + (NSString *)createQuery {
     return [NSString stringWithFormat:
             @"CREATE TABLE IF NOT EXISTS %@("
             "id           TEXT PRIMARY KEY,"// id
-            "ckid         TEXT,"            // Cloud Id
             "title        TEXT,"            // 附加信息标题
             "content      TEXT,"            // 附加信息内容
-            "date         INTEGER"          // 时间
+            "date         INTEGER,"          // 时间
+            "sync         BOOL"
             ");", DBName];
 }
 

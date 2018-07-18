@@ -37,7 +37,7 @@ NSString *const NotesListCell_INDEF = @"NotesListCell";
 #pragma mark - UI
 
 - (void)createUI {
-    [self.contentView addSubview:self.iconView];
+//    [self.contentView addSubview:self.iconView];
     [self.contentView addSubview:self.titleLabel];
 }
 
@@ -54,7 +54,7 @@ NSString *const NotesListCell_INDEF = @"NotesListCell";
 - (UILabel *)titleLabel {
     if (_titleLabel == nil) {
         self.titleLabel = [UILabel new];
-        _titleLabel.frame = CGRectMake(80, 15, 200, 30);
+        _titleLabel.frame = CGRectMake(15, 15, 200, 30);
     }
     return _titleLabel;
 }

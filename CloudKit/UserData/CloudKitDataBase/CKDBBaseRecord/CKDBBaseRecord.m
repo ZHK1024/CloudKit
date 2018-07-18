@@ -29,7 +29,7 @@
 #pragma mark - Setter
 
 - (void)setTitle:(NSString *)title {
-    [self.record setValue:title forKey:@""];
+    [self.record setValue:title forKey:@"title"];
 }
 
 - (void)setContent:(NSString *)content {
@@ -38,6 +38,14 @@
 
 - (void)setDate:(NSInteger)date {
     [self.record setValue:@(date) forKey:@"date"];
+}
+
+- (void)setSync:(BOOL)sync {
+    [self.record setValue:@(sync) forKey:@"sync"];
+}
+
+- (void)setRecordId:(NSString *)recordId {
+    [self.recordId setValue:recordId forKey:@"recordId"];
 }
 
 #pragma mark - Getter
@@ -52,6 +60,21 @@
 
 - (NSInteger)date {
     return [[_record valueForKey:@"date"] integerValue];
+}
+
+- (BOOL)sync {
+    return [[_record valueForKey:@"sync"] boolValue];
+}
+
+- (NSString *)recordId {
+    return [_record valueForKey:@"recordId"];;
+}
+
+- (CKRecord *)record {
+    if (_record == nil) {
+        self.record = [[CKRecord alloc] initWithRecordType:@"Notes"];
+    }
+    return _record;
 }
 
 @end

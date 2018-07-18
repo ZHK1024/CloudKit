@@ -8,10 +8,11 @@
 
 #import <Foundation/Foundation.h>
 #import "LocalDBRecord.h"
+#import "LocalDBBaseRecord.h"
 
 @interface DataStroage : NSObject
 
-- (void)saveRecord:(id <LocalDBRecord>)record;
++ (void)saveRecord:(id <LocalDBRecord>)record block:(void(^)(BOOL success))block;
 
 + (void)records:(void(^)(NSArray *records))block;
 

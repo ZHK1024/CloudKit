@@ -7,6 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <UserData/DataStroage.h>
+//#import <UserData/LoclaDBBaseRecord.h>
+
 
 //! Project version number for UserData.
 FOUNDATION_EXPORT double UserDataVersionNumber;

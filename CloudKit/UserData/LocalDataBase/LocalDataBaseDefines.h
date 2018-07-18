@@ -10,12 +10,12 @@
 #define LocalDataBaseDefines_h
 
 
-typedef NS_ENUM(NSUInteger, DBOperations) {
-    DBOperationNone,
-    DBOperationAdd,
-    DBOperationDelete,
-    DBOperationUpdate,
-    DBOperationSelect
-};
+//typedef NS_ENUM(NSUInteger, DBOperations) {
+//    DBOperationNone,
+//    DBOperationAdd,
+//    DBOperationDelete,
+//    DBOperationUpdate,
+//    DBOperationSelect
+//};
 
 #endif /* LocalDataBaseDefines_h */

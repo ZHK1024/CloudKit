@@ -9,7 +9,26 @@
 #import "CKDBManager.h"
 #import <CloudKit/CloudKit.h>
 
+
+static CKDBManager *manager = nil;
+
+@interface CKDBManager ()
+
+@property (nonatomic, strong) NSOperationQueue *queue;
+
+@end
+
 @implementation CKDBManager
+
++ (instancetype)manager {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        manager = [[CKDBManager alloc] init];
+        manager.queue = [[NSOperationQueue alloc] init];
+        manager.queue.maxConcurrentOperationCount = 1;
+    });
+    return manager;
+}
 
 #pragma mark -
 
@@ -20,11 +39,26 @@
         if (block) {
             block([CKDBBaseRecord recordsWithCKRecords:results]);
         }
+        NSLog(@"error = %@, results", error, results);
     }];
+    
 }
 
-+ (void)saveRecords:(NSArray *)records block:(void(^)(BOOL success))block {
++ (void)saveRecords:(NSArray *)records syncRecord:(void(^)(CKDBBaseRecord *record))block complete:(void(^)(BOOL success))complete {
+    for (CKDBBaseRecord *record in records) {
+        [[CKDBManager manager].queue addOperationWithBlock:^{
+            dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+            [[self dataBase] saveRecord:record.record completionHandler:^(CKRecord * _Nullable record, NSError * _Nullable error) {
+                dispatch_semaphore_signal(semaphore);
+            }];
+            dispatch_semaphore_wait(semaphore, 5);
+            block(record);
+        }];
+    }
     
+    [manager.queue addOperationWithBlock:^{
+        complete(YES);
+    }];
 }
 
 + (CKDatabase *)dataBase {

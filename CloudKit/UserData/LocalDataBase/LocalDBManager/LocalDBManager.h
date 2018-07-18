@@ -28,4 +28,6 @@
  */
 - (void)baseRecordsWithDataClass:(Class<LocalDBRecord>)className block:(void(^)(NSArray *records))block;
 
+- (void)baseUnsyncRecordsWithDataClass:(Class<LocalDBRecord>)className block:(void(^)(NSArray *records))block;
+
 @end
