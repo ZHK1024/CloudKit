@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import <CloudKit/CloudKit.h>
 
 @interface AppDelegate ()
 
@@ -17,6 +18,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    
+    UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert categories:nil];
+    [application registerUserNotificationSettings:notificationSettings];
+    [application registerForRemoteNotifications];
+    
     return YES;
 }
 
@@ -49,6 +55,10 @@
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     NSLog(@"userInfo = %@", userInfo);
+    
+    CKNotification *cloudKitNotification = [CKNotification notificationFromRemoteNotificationDictionary:userInfo];
+    NSString *alertBody = cloudKitNotification.alertBody;
+    NSLog(@"aleryBody = %@", alertBody);
 }
 
 @end

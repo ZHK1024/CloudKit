@@ -9,28 +9,13 @@
 #import "CKDBManager.h"
 #import <CloudKit/CloudKit.h>
 
-
 static CKDBManager *manager = nil;
 
 @interface CKDBManager ()
 
-@property (nonatomic, strong) NSOperationQueue *queue;
-
 @end
 
 @implementation CKDBManager
-
-+ (instancetype)manager {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        manager = [[CKDBManager alloc] init];
-        manager.queue = [[NSOperationQueue alloc] init];
-        manager.queue.maxConcurrentOperationCount = 1;
-    });
-    return manager;
-}
-
-#pragma mark -
 
 + (void)recordsWithName:(NSString *)name block:(void(^)(NSArray <CKDBBaseRecord *>*records))block {
     NSPredicate *predicate = [NSPredicate predicateWithValue:YES];

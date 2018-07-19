@@ -13,7 +13,6 @@
 		240662AE20F6F7AE00B335B7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 240662AC20F6F7AE00B335B7 /* LaunchScreen.storyboard */; };
 		240662B120F6F7AE00B335B7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 240662B020F6F7AE00B335B7 /* main.m */; };
 		240662C220F6F7FA00B335B7 /* CustomNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 240662B920F6F7FA00B335B7 /* CustomNavigationController.m */; };
-		240662C320F6F7FA00B335B7 /* DisplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 240662BB20F6F7FA00B335B7 /* DisplayViewController.m */; };
 		240662C420F6F7FA00B335B7 /* EditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 240662BD20F6F7FA00B335B7 /* EditViewController.m */; };
 		240662C520F6F7FA00B335B7 /* NotesListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 240662BF20F6F7FA00B335B7 /* NotesListCell.m */; };
 		240662C620F6F7FA00B335B7 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 240662C120F6F7FA00B335B7 /* ViewController.m */; };
@@ -79,8 +78,6 @@
 		240662B020F6F7AE00B335B7 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		240662B820F6F7FA00B335B7 /* CustomNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomNavigationController.h; sourceTree = "<group>"; };
 		240662B920F6F7FA00B335B7 /* CustomNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomNavigationController.m; sourceTree = "<group>"; };
-		240662BA20F6F7FA00B335B7 /* DisplayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisplayViewController.h; sourceTree = "<group>"; };
-		240662BB20F6F7FA00B335B7 /* DisplayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DisplayViewController.m; sourceTree = "<group>"; };
 		240662BC20F6F7FA00B335B7 /* EditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditViewController.h; sourceTree = "<group>"; };
 		240662BD20F6F7FA00B335B7 /* EditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditViewController.m; sourceTree = "<group>"; };
 		240662BE20F6F7FA00B335B7 /* NotesListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotesListCell.h; sourceTree = "<group>"; };
@@ -184,8 +181,6 @@
 			children = (
 				240662B820F6F7FA00B335B7 /* CustomNavigationController.h */,
 				240662B920F6F7FA00B335B7 /* CustomNavigationController.m */,
-				240662BA20F6F7FA00B335B7 /* DisplayViewController.h */,
-				240662BB20F6F7FA00B335B7 /* DisplayViewController.m */,
 				240662BC20F6F7FA00B335B7 /* EditViewController.h */,
 				240662BD20F6F7FA00B335B7 /* EditViewController.m */,
 				240662BE20F6F7FA00B335B7 /* NotesListCell.h */,
@@ -426,6 +421,9 @@
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
 							};
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
 							com.apple.Push = {
 								enabled = 1;
 							};
@@ -562,7 +560,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				240662C320F6F7FA00B335B7 /* DisplayViewController.m in Sources */,
 				240662C520F6F7FA00B335B7 /* NotesListCell.m in Sources */,
 				240662C620F6F7FA00B335B7 /* ViewController.m in Sources */,
 				240662B120F6F7AE00B335B7 /* main.m in Sources */,

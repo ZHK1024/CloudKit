@@ -8,13 +8,9 @@
 
 #import "ViewController.h"
 #import <CloudKit/CloudKit.h>
-#import "DisplayViewController.h"
 #import "NotesListCell.h"
 #import <MJRefresh.h>
 
-//#import "UserData.h"
-//#import <UserData/DataStroage.h>
-//#import "UserData.h"
 #import "DataStroage.h"
 #import "EditViewController.h"
 
@@ -31,7 +27,27 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self createUI];
-    [DataStroage download];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithValue:YES];
+    CKSubscription *subscription = nil;
+    if (@available(iOS 10.0, *)) {
+        subscription = [[CKSubscription alloc] initWithRecordType:@"Notes" predicate:predicate options:CKQuerySubscriptionOptionsFiresOnRecordUpdate | CKQuerySubscriptionOptionsFiresOnRecordCreation];
+    } else {
+        subscription = [[CKSubscription alloc] initWithRecordType:@"Notes" predicate:predicate options:CKSubscriptionOptionsFiresOnRecordUpdate | CKSubscriptionOptionsFiresOnRecordCreation];
+    }
+    CKNotificationInfo *notiInfo = [[CKNotificationInfo alloc] init];
+    notiInfo.alertBody = @"New artwork by your favorite artist.";
+    notiInfo.shouldBadge = YES;
+    
+    subscription.notificationInfo = notiInfo;
+    
+    [[CKContainer defaultContainer].privateCloudDatabase saveSubscription:subscription completionHandler:^(CKSubscription * _Nullable subscription, NSError * _Nullable error) {
+        if (error) {
+            NSLog(@"error = %@", error);
+        } else {
+            NSLog(@"success");
+        }
+    }];
 }
 
 - (void)didReceiveMemoryWarning {
