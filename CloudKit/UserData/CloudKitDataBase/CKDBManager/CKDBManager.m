@@ -39,26 +39,20 @@ static CKDBManager *manager = nil;
         if (block) {
             block([CKDBBaseRecord recordsWithCKRecords:results]);
         }
-        NSLog(@"error = %@, results", error, results);
     }];
     
 }
 
-+ (void)saveRecords:(NSArray *)records syncRecord:(void(^)(CKDBBaseRecord *record))block complete:(void(^)(BOOL success))complete {
-    for (CKDBBaseRecord *record in records) {
-        [[CKDBManager manager].queue addOperationWithBlock:^{
-            dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-            [[self dataBase] saveRecord:record.record completionHandler:^(CKRecord * _Nullable record, NSError * _Nullable error) {
-                dispatch_semaphore_signal(semaphore);
-            }];
-            dispatch_semaphore_wait(semaphore, 5);
-            block(record);
-        }];
-    }
-    
-    [manager.queue addOperationWithBlock:^{
-        complete(YES);
++ (void)saveRecords:(NSArray *)records complete:(void(^)(NSArray *recordIDs, NSError *error))complete {
+    // 取出 CKDBBaseRecord 下面的 CKRecord
+    records = [records valueForKeyPath:@"record"];
+    // CK 操作
+    CKModifyRecordsOperation *operation = [[CKModifyRecordsOperation alloc] initWithRecordsToSave:records recordIDsToDelete:nil];
+    operation.savePolicy = CKRecordSaveAllKeys;
+    [operation setModifyRecordsCompletionBlock:^(NSArray<CKRecord *> * _Nullable savedRecords, NSArray<CKRecordID *> * _Nullable deletedRecordIDs, NSError * _Nullable operationError) {
+            complete([savedRecords valueForKeyPath:@"recordID.recordName"], operationError);
     }];
+    [[self dataBase] addOperation:operation];
 }
 
 + (CKDatabase *)dataBase {

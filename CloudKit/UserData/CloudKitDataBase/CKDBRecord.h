@@ -8,6 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
+@class CKRecord;
 @protocol CKDBRecord <NSObject>
+
+- (instancetype)initWithReocrdName:(NSString *)recordName;
+- (void)updateRecord:(CKRecord *)record;
 
 @end

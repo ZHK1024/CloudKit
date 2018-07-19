@@ -43,6 +43,11 @@ typedef NS_ENUM(NSUInteger, DBOperations) {
 + (NSString *)unsyncQuery;
 
 /**
+ 标记为已同步的 sql
+ */
++ (NSString *)markSyncedQuery;
+
+/**
  根据查询结果批量实例化对象
 
  @param resultSet 数据库查询结果对象

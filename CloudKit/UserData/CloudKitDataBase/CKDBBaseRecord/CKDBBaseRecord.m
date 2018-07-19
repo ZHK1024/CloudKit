@@ -13,6 +13,14 @@
 
 #pragma mark - Init
 
+- (instancetype)initWithReocrdName:(NSString *)recordName {
+    if (self = [super init]) {
+        CKRecordID *recordId = [[CKRecordID alloc] initWithRecordName:recordName];
+        self.record = [[CKRecord alloc] initWithRecordType:@"Notes" recordID:recordId];
+    }
+    return self;
+}
+
 + (NSArray <CKDBBaseRecord *>*)recordsWithCKRecords:(NSArray <CKRecord *>*)records {
     if (records.count == 0) {
         return @[];
@@ -24,6 +32,13 @@
         [temp addObject:rd];
     }
     return temp;
+}
+
+- (void)updateRecord:(CKRecord *)record {
+    [record setValue:self.title forKey:@"title"];
+    [record setValue:self.content forKey:@"content"];
+    [record setValue:@(self.date) forKey:@"date"];
+    [record setValue:@(self.sync) forKey:@"sync"];
 }
 
 #pragma mark - Setter
@@ -44,37 +59,26 @@
     [self.record setValue:@(sync) forKey:@"sync"];
 }
 
-- (void)setRecordId:(NSString *)recordId {
-    [self.recordId setValue:recordId forKey:@"recordId"];
-}
-
 #pragma mark - Getter
 
 - (NSString *)title {
-    return [_record valueForKey:@"title"];
+    return [self.record valueForKey:@"title"];
 }
 
 - (NSString *)content {
-    return [_record valueForKey:@"content"];
+    return [self.record valueForKey:@"content"];
 }
 
 - (NSInteger)date {
-    return [[_record valueForKey:@"date"] integerValue];
+    return [[self.record valueForKey:@"date"] integerValue];
 }
 
 - (BOOL)sync {
-    return [[_record valueForKey:@"sync"] boolValue];
+    return [[self.record valueForKey:@"sync"] boolValue];
 }
 
 - (NSString *)recordId {
-    return [_record valueForKey:@"recordId"];;
-}
-
-- (CKRecord *)record {
-    if (_record == nil) {
-        self.record = [[CKRecord alloc] initWithRecordType:@"Notes"];
-    }
-    return _record;
+    return self.record.recordID.recordName;
 }
 
 @end

@@ -40,6 +40,11 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="2Db-UZ-D4M">
+                        <barButtonItem key="leftBarButtonItem" title="Delete" id="0E9-2C-b5r">
+                            <connections>
+                                <action selector="deleteCKDatabase" destination="BYZ-38-t0r" id="pNd-wD-K2q"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Item" image="edit" id="in6-tk-Bbb">
                             <connections>
                                 <segue destination="nRk-g3-ipx" kind="push" id="Dvj-nQ-0CE"/>
@@ -151,7 +156,7 @@
         <!--Edit View Controller-->
         <scene sceneID="qgX-11-6eF">
             <objects>
-                <viewController id="nRk-g3-ipx" customClass="EditViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="editvc" id="nRk-g3-ipx" customClass="EditViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="gmw-EI-zAH"/>
                         <viewControllerLayoutGuide type="bottom" id="y3p-aH-r0Y"/>
@@ -161,19 +166,19 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="标题" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="FWx-Dz-JGF">
-                                <rect key="frame" x="16" y="83" width="343" height="30"/>
+                                <rect key="frame" x="16" y="83" width="343" height="60"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="FWx-Dz-JGF" secondAttribute="height" multiplier="343:30" id="7tX-ag-kC4"/>
+                                    <constraint firstAttribute="width" secondItem="FWx-Dz-JGF" secondAttribute="height" multiplier="343:60" id="7tX-ag-kC4"/>
                                 </constraints>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                             </textField>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="ALE-Ff-zB9">
-                                <rect key="frame" x="16" y="129" width="343" height="522"/>
+                                <rect key="frame" x="16" y="159" width="343" height="492"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" keyboardType="numberPad"/>
                             </textView>
                         </subviews>
                         <color key="backgroundColor" red="0.87942165798611116" green="0.93454318576388884" blue="0.819091796875" alpha="1" colorSpace="calibratedRGB"/>

@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+@class LocalDBBaseRecord;
 @interface EditViewController : UIViewController
+
+@property (nonatomic, strong) LocalDBBaseRecord *record;
 
 @end

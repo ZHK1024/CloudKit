@@ -26,6 +26,6 @@
  @param records  记录数组
  @param complete 执行完成回调
  */
-+ (void)saveRecords:(NSArray *)records syncRecord:(void(^)(CKDBBaseRecord *record))block complete:(void(^)(BOOL success))complete;
++ (void)saveRecords:(NSArray *)records complete:(void(^)(NSArray *recordIDs, NSError *error))complete;
 
 @end

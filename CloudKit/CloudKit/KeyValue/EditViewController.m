@@ -9,6 +9,7 @@
 #import "EditViewController.h"
 #import <CloudKit/CloudKit.h>
 #import "DataStroage.h"
+#import "LocalDBBaseRecord.h"
 
 @interface EditViewController ()
 
@@ -23,33 +24,39 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self display];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
 
+- (void)display {
+    if (_record) {
+        _textField.text = _record.title;
+        _textView.text = _record.content;
+    }
+}
+
 #pragma mark - Action
 
 - (IBAction)save:(UIBarButtonItem *)sender {
-    NSLog(@"title = %@   %@", _textField.text, _textView.text);
-    
     NSInteger timestamp = [[NSDate date] timeIntervalSince1970];
     
-    LocalDBBaseRecord *record = [[LocalDBBaseRecord alloc] init];
-    record.date      = timestamp;
+    LocalDBBaseRecord *record = nil;
+    if (_record) {
+        record = _record;
+        record.operation = DBOperationUpdate;
+    } else {
+        record = [[LocalDBBaseRecord alloc] init];
+        record.date      = timestamp;
+        record.operation = DBOperationAdd;
+    }
     record.title     = _textField.text;
     record.content   = _textView.text;
     record.sync      = NO;
-    record.operation = DBOperationAdd;
+    
     [DataStroage saveRecord:record block:^(BOOL success) {
-//        dispatch_async(dispatch_get_global_queue(0, DISPATCH_QUEUE_PRIORITY_DEFAULT), ^{
-//           
-//        });
-        
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [DataStroage upload];
-        });
         [self.navigationController popViewControllerAnimated:YES];
     }];
     
@@ -62,8 +69,12 @@
 //    subscription.notificationInfo = notificationInfo;
 //
 //
-//    CKContainer *container = [CKContainer defaultContainer];
-//    CKDatabase *dataBase = container.privateCloudDatabase;
+    CKRecord *ckd;
+    
+    
+    CKContainer *container = [CKContainer defaultContainer];
+    CKDatabase *dataBase = container.privateCloudDatabase;
+//    dataBase
     
 //    [dataBase saveSubscription:subscription completionHandler:^(CKSubscription * _Nullable subscription, NSError * _Nullable error) {
 //        NSLog(@"error = %@", error);

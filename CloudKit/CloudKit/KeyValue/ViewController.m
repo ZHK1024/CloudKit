@@ -16,6 +16,7 @@
 //#import <UserData/DataStroage.h>
 //#import "UserData.h"
 #import "DataStroage.h"
+#import "EditViewController.h"
 
 
 @interface ViewController ()
@@ -30,20 +31,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self createUI];
-    
-    NSLog(@"db = %@", [CKContainer defaultContainer].privateCloudDatabase);
-    [[CKContainer defaultContainer] statusForApplicationPermission:CKApplicationPermissionUserDiscoverability completionHandler:^(CKApplicationPermissionStatus applicationPermissionStatus, NSError * _Nullable error) {
-        
-    }];
-    
-//    [CKContainer defaultContainer].privateCloudDatabase performQuery:<#(nonnull CKQuery *)#> inZoneWithID:<#(nullable CKRecordZoneID *)#> completionHandler:<#^(NSArray<CKRecord *> * _Nullable results, NSError * _Nullable error)completionHandler#>
-    
-//    [[CKOperation alloc] init];
-    
-//    [[CKUserIdentity new] hasiCloudAccount];
-    
-//    [DataStroage upload];
-//    [DataStroage download];
+    [DataStroage download];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -81,6 +69,17 @@
     }];
 }
 
+- (IBAction)deleteCKDatabase {
+    CKQuery *query = [[CKQuery alloc] initWithRecordType:@"Notes" predicate:[NSPredicate predicateWithValue:YES]];
+    [[CKContainer defaultContainer].privateCloudDatabase performQuery:query inZoneWithID:nil completionHandler:^(NSArray<CKRecord *> * _Nullable results, NSError * _Nullable error) {
+        for (CKRecord *record in results) {
+            [[CKContainer defaultContainer].privateCloudDatabase deleteRecordWithID:record.recordID completionHandler:^(CKRecordID * _Nullable recordID, NSError * _Nullable error) {
+                NSLog(@"delete");
+            }];
+        }
+    }];
+}
+
 #pragma mark - UITableView dataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -100,10 +99,8 @@
         NSDate *date = [NSDate dateWithTimeIntervalSince1970:record.date];
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
-        [formatter stringFromDate:date];
+        [NSString stringWithFormat:@"%@ -> %d", [formatter stringFromDate:date], record.sync];
     });
-    
-    NSLog(@"recordId = %@   %@", record, record.recordId);
     return cell;
 }
 
@@ -112,9 +109,10 @@
 // row select
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    DisplayViewController *displayVC = [[DisplayViewController alloc] init];
-    displayVC.record = _dataSource[indexPath.row];
-    [self.navigationController pushViewController:displayVC animated:YES];
+    UIStoryboard *sb = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    EditViewController *editVC = [sb instantiateViewControllerWithIdentifier:@"editvc"];
+    editVC.record = _dataSource[indexPath.row];
+    [self.navigationController pushViewController:editVC animated:YES];
 }
 
 // row heighr

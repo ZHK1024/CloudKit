@@ -7,9 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "CKDBRecord.h"
 
 @class CKRecord;
-@interface CKDBBaseRecord : NSObject
+@interface CKDBBaseRecord : NSObject <CKDBRecord>
 
 @property (nonatomic, strong) CKRecord *record;
 

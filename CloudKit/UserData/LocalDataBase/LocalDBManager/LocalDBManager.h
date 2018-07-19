@@ -30,4 +30,6 @@
 
 - (void)baseUnsyncRecordsWithDataClass:(Class<LocalDBRecord>)className block:(void(^)(NSArray *records))block;
 
+- (void)markRecordSuncedWithDataClass:(Class<LocalDBRecord>)className recordIds:(NSArray *)recordIDs block:(void(^)(BOOL finish))block;
+
 @end

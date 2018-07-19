@@ -43,21 +43,20 @@ static DataStroage *stroage = nil;
 + (void)download {
     [CKDBManager recordsWithName:@"Notes" block:^(NSArray<CKDBBaseRecord *> *records) {
         NSLog(@"records = %@", records);
-        [[DataStroage stroage].LDBManager saveRecords:[self localRecordWithCKRecords:records] block:^(BOOL success) {
+        [[DataStroage stroage].LDBManager saveRecords:[self localRecordWithCKRecords:records operation:DBOperationAdd] block:^(BOOL success) {
             NSLog(@"success = %d", success);
         }];
     }];
 }
 
 + (void)upload {
+    // 查询本地未同步到云端的记录
     [[DataStroage stroage].LDBManager baseUnsyncRecordsWithDataClass:[LocalDBBaseRecord class] block:^(NSArray *records) {
-        
-        [CKDBManager saveRecords:[self CKDBRecordsWithLocalRecords:records] syncRecord:^(CKDBBaseRecord *record) {
-            [[DataStroage stroage].LDBManager saveRecords:[self localRecordWithCKRecords:@[record]] block:^(BOOL success) {
-                NSLog(@"sync success");
+        // 同步记录
+        [CKDBManager saveRecords:[self CKDBRecordsWithLocalRecords:records] complete:^(NSArray *recordIDs, NSError *error) {
+            // 标记本地记录为已同步
+            [[DataStroage stroage].LDBManager markRecordSuncedWithDataClass:[LocalDBBaseRecord class] recordIds:recordIDs block:^(BOOL finish) {
             }];
-        } complete:^(BOOL success) {
-            NSLog(@"sync finish");
         }];
     }];
 }
@@ -70,7 +69,7 @@ static DataStroage *stroage = nil;
 
 #pragma mark -
 
-+ (NSArray <LocalDBRecord>*)localRecordWithCKRecords:(NSArray *)records {
++ (NSArray <LocalDBRecord>*)localRecordWithCKRecords:(NSArray *)records operation:(DBOperations)operation {
     if (records.count == 0) {
         return nil;
     }
@@ -82,7 +81,7 @@ static DataStroage *stroage = nil;
         re.content   = record.content;
         re.date      = record.date;
         re.sync      = YES;
-        re.operation = DBOperationAdd;
+        re.operation = operation;
         [temp addObject:re];
     }
     return temp;
@@ -94,9 +93,7 @@ static DataStroage *stroage = nil;
     }
     NSMutableArray<CKDBRecord> *temp = (NSMutableArray<CKDBRecord> *)[NSMutableArray new];
     for (LocalDBBaseRecord *record in records) {
-        CKDBBaseRecord *re = [[CKDBBaseRecord alloc] init];
-        re.recordId = record.recordId;
-        re.recordId = record.recordId;
+        CKDBBaseRecord *re = [[CKDBBaseRecord alloc] initWithReocrdName:record.recordId];
         re.title    = record.title;
         re.content  = record.content;
         re.date     = record.date;

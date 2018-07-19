@@ -11,7 +11,6 @@
 @interface LocalDBQuery : NSObject
 
 @property (nonatomic, strong) NSString *exetuteQuery;
-//@property (nonatomic, strong) NSString *createQuery;
 @property (nonatomic, strong) NSArray  *arguments;
 
 @end

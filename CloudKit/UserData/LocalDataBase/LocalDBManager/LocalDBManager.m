@@ -22,17 +22,16 @@
 
 - (void)saveRecords:(NSArray <LocalDBRecord>*)records block:(void(^)(BOOL success))block {
     [self.dbQueue inDatabase:^(FMDatabase * _Nonnull db) {
-        
         [db open];
         for (id <LocalDBRecord> record in records) {
             if (record.query.exetuteQuery == nil) {
                 continue;
             }
             [db executeUpdate:[[record class] createQuery]];
-            BOOL res = [db executeUpdate:record.query.exetuteQuery withArgumentsInArray:record.query.arguments];
-            NSLog(@"res = %d", res);
+            [db executeUpdate:record.query.exetuteQuery withArgumentsInArray:record.query.arguments];
         }
         [db close];
+        // 主队列调用, 防止数据库队列嵌套, 造成死锁
         dispatch_async(dispatch_get_main_queue(), ^{
             if (block) {
                 block(YES);
@@ -66,6 +65,22 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             if (block) {
                 block(records);
+            }
+        });
+    }];
+}
+
+- (void)markRecordSuncedWithDataClass:(Class<LocalDBRecord>)className recordIds:(NSArray *)recordIDs block:(void(^)(BOOL finish))block {
+    [self.dbQueue inDatabase:^(FMDatabase * _Nonnull db) {
+        [db open];
+        [db executeUpdate:[className createQuery]];
+        
+        NSString *query = [NSString stringWithFormat:@"%@ ('%@')", [className markSyncedQuery], [recordIDs componentsJoinedByString:@"','"]];
+        [db executeUpdate:query];
+        [db close];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (block) {
+                block(YES);
             }
         });
     }];

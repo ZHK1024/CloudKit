@@ -33,7 +33,7 @@ static NSString *const DBName = @"Note";
         self.title    = [resuleSet stringForColumn:@"title"];
         self.content  = [resuleSet stringForColumn:@"content"];
         self.date     = [resuleSet intForColumn:@"date"];
-        
+        self.sync     = [resuleSet boolForColumn:@"sync"];
     }
     return self;
 }
@@ -90,14 +90,18 @@ GETTER_SAFE(NSString, content, @"")
     return [NSString stringWithFormat:@"SELECT * FROM %@ WHERE sync = 0", DBName];
 }
 
++ (NSString *)markSyncedQuery {
+    return [NSString stringWithFormat:@"UPDATE %@ SET sync = 1 WHERE id in", DBName];
+}
+
 + (NSString *)createQuery {
     return [NSString stringWithFormat:
             @"CREATE TABLE IF NOT EXISTS %@("
-            "id           TEXT PRIMARY KEY,"// id
-            "title        TEXT,"            // 附加信息标题
-            "content      TEXT,"            // 附加信息内容
-            "date         INTEGER,"          // 时间
-            "sync         BOOL"
+            "id           TEXT PRIMARY KEY,"    // id
+            "title        TEXT,"                // 附加信息标题
+            "content      TEXT,"                // 附加信息内容
+            "date         INTEGER,"             // 时间
+            "sync         BOOL"                 // 是否已与 CloudKit 进行同步
             ");", DBName];
 }
 
